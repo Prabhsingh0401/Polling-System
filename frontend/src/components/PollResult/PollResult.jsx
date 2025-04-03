@@ -1,7 +1,6 @@
 import React from "react";
 
 const PollResults = ({ poll }) => {
-  // Guard clause for empty poll data
   if (!poll || !poll.question || !poll.responses) {
     return (
       <div className="text-center p-4 bg-gray-100 rounded-lg">
@@ -10,14 +9,11 @@ const PollResults = ({ poll }) => {
     );
   }
 
-  // Calculate total votes from all responses
   const totalVotes = Object.values(poll.responses).reduce((sum, count) => sum + count, 0);
   
-  // Sort responses by count in descending order
   const sortedResponses = Object.entries(poll.responses)
     .sort((a, b) => b[1] - a[1]);
 
-  // Calculate the highest vote count for highlighting the leading answer
   const highestVoteCount = sortedResponses.length > 0 ? sortedResponses[0][1] : 0;
 
   return (

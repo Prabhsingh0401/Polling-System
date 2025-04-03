@@ -1,6 +1,5 @@
 export const getPollStatus = (req, res) => {
     try {
-        // You can add logic here to get the current poll status from your application state
         res.json({ 
             success: true,
             message: "Poll status fetched successfully!" 
@@ -25,7 +24,6 @@ export const createPoll = (req, res) => {
             });
         }
         
-        // You can add logic here to create a poll in your database
         res.json({ 
             success: true,
             message: "Poll created successfully!", 

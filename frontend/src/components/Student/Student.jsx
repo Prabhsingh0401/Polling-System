@@ -45,7 +45,6 @@ const Student = () => {
                 setSubmitted(false);
                 setSelectedOption("");
                 
-                // Handle poll timer if available
                 if (newPoll.duration) {
                     setRemainingTime(newPoll.duration);
                 }
@@ -94,7 +93,6 @@ const Student = () => {
             }, 1000);
         }
 
-        // Cleanup function
         return () => {
             socket.off("connect");
             socket.off("disconnect");

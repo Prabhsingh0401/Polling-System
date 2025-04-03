@@ -148,7 +148,6 @@ const Teacher = () => {
     };
 
     const createPoll = () => {
-        // Filter out empty options
         const validOptions = options.filter(opt => opt.trim() !== "");
         
         if (question.trim() && validOptions.length >= 2) {
@@ -163,9 +162,6 @@ const Teacher = () => {
             socket.emit("createPoll", pollData);
         }
     };
-
-    // REMOVED DUPLICATE EVENT LISTENER - This was causing issues
-    // socket.on("pollCreated", (newPoll) => { ... });
 
     const endPoll = () => {
         console.log("Ending poll");
@@ -245,7 +241,6 @@ const Teacher = () => {
                             />
                         </div>
                         
-                        {/* Second cell - Options */}
                         <div>
                             <h4 className="text-md font-medium mb-2">Answer Choices:</h4>
                             {options.map((option, index) => (
@@ -278,7 +273,6 @@ const Teacher = () => {
                             )}
                         </div>
                         
-                        {/* Third cell - Poll Duration */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Poll Duration (seconds):
@@ -293,7 +287,6 @@ const Teacher = () => {
                             />
                         </div>
                         
-                        {/* Fourth cell - Start Poll button */}
                         <div className="col-span-2">
                             <button 
                                 onClick={createPoll}
