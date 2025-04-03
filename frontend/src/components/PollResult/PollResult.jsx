@@ -36,10 +36,10 @@ const PollResults = ({ poll }) => {
             return (
               <div 
                 key={index} 
-                className={`bg-white border rounded-lg p-3 ${isLeading ? 'border-blue-400' : ''}`}
+                className={`bg-gray-600 border rounded-lg p-3 ${isLeading ? 'border-gray-400' : ''}`}
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className={`font-medium ${isLeading ? 'text-blue-600' : ''}`}>
+                  <span className={`font-medium ${isLeading ? 'text-white' : ''}`}>
                     {answer}
                     {isLeading && totalVotes > 1 && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Leading</span>}
                   </span>

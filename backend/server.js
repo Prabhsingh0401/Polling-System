@@ -286,7 +286,6 @@ server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Handle server shutdown gracefully
 process.on('SIGINT', () => {
     console.log('Server shutting down');
     server.close(() => {

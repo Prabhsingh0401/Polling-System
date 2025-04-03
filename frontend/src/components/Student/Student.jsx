@@ -13,7 +13,7 @@ const Student = () => {
     
     const [name, setName] = useState("");
     const [nameInput, setNameInput] = useState("");
-    const [answer, setAnswer] = useState("");
+    const [selectedOption, setSelectedOption] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState("connecting");
     const [remainingTime, setRemainingTime] = useState(null);
@@ -42,7 +42,7 @@ const Student = () => {
             if (newPoll && newPoll.question) {
                 dispatch(setPoll(newPoll));
                 setSubmitted(false);
-                setAnswer("");
+                setSelectedOption("");
                 
                 // Handle poll timer if available
                 if (newPoll.duration) {
@@ -117,18 +117,18 @@ const Student = () => {
     };
 
     const submitAnswer = () => {
-        if (answer.trim() && name) {
-            console.log("Submitting answer:", { studentId: name, answer });
-            socket.emit("submitAnswer", { studentId: name, answer: answer.trim() });
+        if (selectedOption && name) {
+            console.log("Submitting answer:", { studentId: name, answer: selectedOption });
+            socket.emit("submitAnswer", { studentId: name, answer: selectedOption });
             setSubmitted(true);
         }
     };
 
     if (kicked) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-                <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-                    <div className="text-red-500 font-medium text-center mb-4">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+                <div className="w-full max-w-2xl bg-black shadow-lg rounded-lg p-6">
+                    <div className="text-red-500 text-3xl font-medium text-center mb-4">
                         You have been removed from the classroom by the teacher.
                     </div>
                     <button 
@@ -143,7 +143,7 @@ const Student = () => {
 
     if (connectionStatus === "disconnected") {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-white">
                 <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
                     <div className="text-red-500 font-medium text-center mb-4">
                         Disconnected from server.
@@ -159,68 +159,104 @@ const Student = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
             {!name ? (
-                <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-                    <h2 className="text-xl font-bold text-center mb-4">Join Classroom</h2>
-                    <div className="flex flex-col items-center">
+                <div className="w-full max-w-3xl flex flex-col justify-center items-center bg-black shadow-lg rounded-lg p-6 text-white">
+                   <div className="flex w-50 items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-green-500 
+                            text-white font-medium rounded-full shadow-md mb-8">
+                        <span className="text-lg text-white">✨</span>
+                        <span className="text-lg">Intervue Poll</span>
+                    </div> 
+                    <h2 className="text-4xl font-semibold text-center mb-4">Let's get started</h2>
+                    <p className="text-center mb-8">If you are a student, you will be able to submit your answers, participate in live polls, and see how your responses compare with your classmates</p>
+                    <div className="flex flex-col items-center w-full max-w-md">
                         <input
                             type="text"
                             placeholder="Enter your name"
                             value={nameInput}
                             onChange={(e) => setNameInput(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
                             onKeyPress={(e) => e.key === 'Enter' && handleJoin()}
                         />
                         <button 
                             onClick={handleJoin} 
                             disabled={!nameInput.trim()}
-                            className={`mt-4 w-full px-6 py-2 ${!nameInput.trim() ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'} text-white rounded-lg transition`}>
+                            className={`mt-4 w-full px-6 py-2 ${!nameInput.trim() ? 'bg-gray-700 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'} text-white rounded-lg transition`}>
                             Join
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+                <div className="w-full max-w-2xl bg-gray-900 text-white shadow-lg rounded-lg p-6">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-bold">Student View</h2>
                         <div className="flex items-center space-x-2">
                             <span className={`inline-block w-3 h-3 rounded-full ${connectionStatus === "connected" ? "bg-green-500" : "bg-red-500"}`}></span>
-                            <span className="text-sm text-gray-500">{name}</span>
+                            <span className="text-sm text-gray-300">{name}</span>
                         </div>
                     </div>
 
                     {poll.question ? (
                         <div>
                             {remainingTime !== null && remainingTime > 0 && (
-                                <div className="mb-3 p-2 bg-blue-50 rounded-lg text-center">
-                                    <span className="text-blue-700 font-medium">Time remaining: {remainingTime}s</span>
+                                <div className="mb-3 p-2 bg-blue-400 rounded-lg text-center">
+                                    <span className="text-white font-medium">Time remaining: {remainingTime}s</span>
                                 </div>
                             )}
                             
                             {submitted ? (
                                 <div>
-                                    <div className="mb-4 p-3 bg-green-50 rounded-lg">
-                                        <div className="text-lg font-semibold text-gray-800">Your answer: {answer}</div>
-                                        <div className="text-sm text-green-500">Answer submitted successfully</div>
+                                    <div className="mb-4 p-3 bg-gray-600 rounded-lg text-white">
+                                        <div className="text-lg font-semibold text-white">Question: {poll.question}</div>
+                                        <div className="mt-2 text-white">Your answer: <span className="font-medium">{selectedOption}</span></div>
+                                        <div className="text-sm text-green-500 mt-1">Answer submitted successfully</div>
                                     </div>
                                     <PollResults poll={poll} />
                                 </div>
                             ) : (
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">{poll.question}</h3>
-                                    <input
-                                        type="text"
-                                        placeholder="Your Answer"
-                                        value={answer}
-                                        onChange={(e) => setAnswer(e.target.value)}
-                                        className="w-full px-4 py-2 mt-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onKeyPress={(e) => e.key === 'Enter' && answer.trim() && submitAnswer()}
-                                    />
+                                    <h3 className="text-lg font-semibold text-white mb-3">{poll.question}</h3>
+                                    
+                                    {poll.options && poll.options.length > 0 ? (
+                                        <div className="space-y-2 mt-3 mb-4">
+                                            {poll.options.map((option, index) => (
+                                                <div 
+                                                    key={index}
+                                                    onClick={() => setSelectedOption(option)}
+                                                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                                                        selectedOption === option 
+                                                        ? 'bg-blue-500 border-blue-700 text-white' 
+                                                        : 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center">
+                                                        <div className={`w-5 h-5 mr-3 rounded-full border flex items-center justify-center ${
+                                                            selectedOption === option 
+                                                            ? 'border-white bg-white' 
+                                                            : 'border-gray-400'
+                                                        }`}>
+                                                            {selectedOption === option && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
+                                                        </div>
+                                                        <span className={selectedOption === option ? 'font-medium' : ''}>{option}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            placeholder="Your Answer"
+                                            value={selectedOption}
+                                            onChange={(e) => setSelectedOption(e.target.value)}
+                                            className="w-full px-4 py-2 mt-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-100 text-white"
+                                            onKeyPress={(e) => e.key === 'Enter' && selectedOption.trim() && submitAnswer()}
+                                        />
+                                    )}
+                                    
                                     <button 
                                         onClick={submitAnswer} 
-                                        disabled={!answer.trim()}
-                                        className={`mt-4 w-full px-6 py-2 ${!answer.trim() ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-lg transition`}>
+                                        disabled={!selectedOption}
+                                        className={`mt-4 w-full px-6 py-2 ${!selectedOption ? 'bg-gray-700 opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'} text-white rounded-lg transition`}>
                                         Submit
                                     </button>
                                 </div>
@@ -228,7 +264,7 @@ const Student = () => {
                         </div>
                     ) : (
                         <div className="text-center py-8">
-                            <h3 className="text-gray-500 text-lg">Waiting for teacher to start a poll...</h3>
+                            <h3 className="text-white text-lg">Waiting for teacher to start a poll...</h3>
                         </div>
                     )}
                 </div>
