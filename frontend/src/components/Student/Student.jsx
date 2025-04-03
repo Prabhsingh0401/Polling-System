@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPoll } from "../../redux/pollSlice";
 import PollResults from "../PollResult/PollResult";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://polling-system-txvu.onrender.com";
 const socket = io(BACKEND_URL);
 
 const Student = () => {
@@ -20,12 +20,10 @@ const Student = () => {
     const [kicked, setKicked] = useState(false);
 
     useEffect(() => {
-        // Handle connection events
         socket.on("connect", () => {
             console.log("Student connected to server with ID:", socket.id);
             setConnectionStatus("connected");
             
-            // If name is already set, join immediately
             if (name) {
                 socket.emit("join", { role: "student", name });
                 console.log(`Re-joining as student: ${name}`);

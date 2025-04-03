@@ -5,7 +5,7 @@ import { setPoll } from "../../redux/pollSlice";
 import PollResults from "../PollResult/PollResult";
 
 // Create the socket connection outside the component
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://polling-system-txvu.onrender.com";
 const socket = io(BACKEND_URL);
 
 const Teacher = () => {
