@@ -38,6 +38,7 @@ const Student = () => {
         // Poll events
         socket.on("pollCreated", (newPoll) => {
             console.log("Student received new poll:", newPoll);
+            console.log("Options in received poll:", newPoll.options);
             
             if (newPoll && newPoll.question) {
                 dispatch(setPoll(newPoll));
@@ -143,8 +144,8 @@ const Student = () => {
 
     if (connectionStatus === "disconnected") {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-white">
-                <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+                <div className="w-full max-w-md bg-black shadow-lg rounded-lg p-6">
                     <div className="text-red-500 font-medium text-center mb-4">
                         Disconnected from server.
                     </div>
@@ -175,7 +176,7 @@ const Student = () => {
                             placeholder="Enter your name"
                             value={nameInput}
                             onChange={(e) => setNameInput(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
                             onKeyPress={(e) => e.key === 'Enter' && handleJoin()}
                         />
                         <button 
@@ -199,14 +200,14 @@ const Student = () => {
                     {poll.question ? (
                         <div>
                             {remainingTime !== null && remainingTime > 0 && (
-                                <div className="mb-3 p-2 bg-blue-400 rounded-lg text-center">
+                                <div className="mb-3 p-2 bg-blue-900 rounded-lg text-center">
                                     <span className="text-white font-medium">Time remaining: {remainingTime}s</span>
                                 </div>
                             )}
                             
                             {submitted ? (
                                 <div>
-                                    <div className="mb-4 p-3 bg-gray-600 rounded-lg text-white">
+                                    <div className="mb-4 p-3 bg-gray-800 rounded-lg text-white">
                                         <div className="text-lg font-semibold text-white">Question: {poll.question}</div>
                                         <div className="mt-2 text-white">Your answer: <span className="font-medium">{selectedOption}</span></div>
                                         <div className="text-sm text-green-500 mt-1">Answer submitted successfully</div>
@@ -243,14 +244,17 @@ const Student = () => {
                                             ))}
                                         </div>
                                     ) : (
-                                        <input
-                                            type="text"
-                                            placeholder="Your Answer"
-                                            value={selectedOption}
-                                            onChange={(e) => setSelectedOption(e.target.value)}
-                                            className="w-full px-4 py-2 mt-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-100 text-white"
-                                            onKeyPress={(e) => e.key === 'Enter' && selectedOption.trim() && submitAnswer()}
-                                        />
+                                        <div className="p-4 bg-gray-800 rounded-lg">
+                                            <p className="text-yellow-400">No options available for this poll</p>
+                                            <input
+                                                type="text"
+                                                placeholder="Your Answer"
+                                                value={selectedOption}
+                                                onChange={(e) => setSelectedOption(e.target.value)}
+                                                className="w-full px-4 py-2 mt-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-700 text-white"
+                                                onKeyPress={(e) => e.key === 'Enter' && selectedOption.trim() && submitAnswer()}
+                                            />
+                                        </div>
                                     )}
                                     
                                     <button 

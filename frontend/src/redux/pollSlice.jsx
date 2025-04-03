@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     question: null,
-    options: [], // Added options array explicitly
+    options: [], // Array of options
     responses: {},
     stats: {
         connectedStudents: 0,
@@ -18,9 +18,16 @@ const pollSlice = createSlice({
     initialState,
     reducers: {
         setPoll: (state, action) => {
-            // Make sure to explicitly handle all properties
+            // Use console.log to debug the incoming payload
+            console.log("setPoll reducer received:", action.payload);
+            
+            // Make sure to explicitly handle all properties with proper fallbacks
             state.question = action.payload.question || null;
-            state.options = action.payload.options || [];
+            
+            // Ensure options is always an array even if undefined in payload
+            state.options = Array.isArray(action.payload.options) ? [...action.payload.options] : [];
+            console.log("Options set in reducer:", state.options);
+            
             state.responses = action.payload.responses || {};
             state.type = action.payload.type || null;
             state.duration = action.payload.duration || null;

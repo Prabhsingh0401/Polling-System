@@ -41,13 +41,13 @@ const PollResults = ({ poll }) => {
                 <div className="flex justify-between items-center mb-1">
                   <span className={`font-medium ${isLeading ? 'text-white' : ''}`}>
                     {answer}
-                    {isLeading && totalVotes > 1 && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Leading</span>}
+                    {isLeading && totalVotes > 1 && <span className="ml-2 text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">Leading</span>}
                   </span>
-                  <span className="text-sm text-gray-600">{count} vote{count !== 1 ? 's' : ''} ({percentage}%)</span>
+                  <span className="text-sm text-gray-300">{count} vote{count !== 1 ? 's' : ''} ({percentage}%)</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div className="w-full bg-gray-700 rounded-full h-2.5">
                   <div 
-                    className={`${isLeading ? 'bg-blue-600' : 'bg-blue-400'} h-2.5 rounded-full transition-all duration-300`}
+                    className={`${isLeading ? 'bg-blue-500' : 'bg-blue-400'} h-2.5 rounded-full transition-all duration-300`}
                     style={{ width: `${percentage}%` }}
                   ></div>
                 </div>
@@ -56,8 +56,8 @@ const PollResults = ({ poll }) => {
           })}
         </div>
       ) : (
-        <div className="text-center p-4 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No responses yet</p>
+        <div className="text-center p-4 bg-gray-700 rounded-lg">
+          <p className="text-gray-300">No responses yet</p>
         </div>
       )}
     </div>

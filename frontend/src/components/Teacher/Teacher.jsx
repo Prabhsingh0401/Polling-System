@@ -152,15 +152,20 @@ const Teacher = () => {
         const validOptions = options.filter(opt => opt.trim() !== "");
         
         if (question.trim() && validOptions.length >= 2) {
-            console.log("Creating MCQ poll:", question, validOptions);
-            socket.emit("createPoll", { 
+            const pollData = { 
                 question, 
                 options: validOptions,
                 type: "mcq",
                 duration: pollDuration 
-            });
+            };
+            
+            console.log("Creating MCQ poll with data:", pollData);
+            socket.emit("createPoll", pollData);
         }
     };
+
+    // REMOVED DUPLICATE EVENT LISTENER - This was causing issues
+    // socket.on("pollCreated", (newPoll) => { ... });
 
     const endPoll = () => {
         console.log("Ending poll");
@@ -236,7 +241,7 @@ const Teacher = () => {
                                 value={question}
                                 onChange={(e) => setQuestion(e.target.value)}
                                 placeholder="Enter your question"
-                                className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white bg-gray-800"
                             />
                         </div>
                         
@@ -251,7 +256,7 @@ const Teacher = () => {
                                             value={option}
                                             onChange={(e) => handleOptionChange(index, e.target.value)}
                                             placeholder={`Option ${index + 1}`}
-                                            className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                            className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white bg-gray-800"
                                         />
                                     </div>
                                     {options.length > 2 && (
@@ -284,7 +289,7 @@ const Teacher = () => {
                                 max="300"
                                 value={pollDuration}
                                 onChange={(e) => setPollDuration(Math.max(10, Math.min(300, parseInt(e.target.value) || 30)))}
-                                className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                className="w-full px-4 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white bg-gray-800"
                             />
                         </div>
                         
@@ -326,13 +331,17 @@ const Teacher = () => {
                         <div className="p-4 bg-gray-800 rounded-lg mb-4">
                             <div className="text-lg font-medium">{poll.question}</div>
                             
-                            {poll.options && (
+                            {poll.options && poll.options.length > 0 ? (
                                 <div className="mt-3 grid grid-cols-1 gap-2">
                                     {poll.options.map((option, index) => (
                                         <div key={index} className="p-3 bg-gray-700 rounded-md">
                                             {option}
                                         </div>
                                     ))}
+                                </div>
+                            ) : (
+                                <div className="mt-3 p-2 bg-yellow-800 rounded-md text-yellow-300">
+                                    No options available
                                 </div>
                             )}
                         </div>
