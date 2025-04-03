@@ -13,6 +13,11 @@ const io = new Server(server, { cors: { origin: "*" } });
 app.use(cors());
 app.use(express.json());
 
+app.get("/test", (req, res) => {
+    res.send("Server is working!");
+});
+
+
 io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
     
