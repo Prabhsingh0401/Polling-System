@@ -19,6 +19,15 @@ The **Live Polling System**  allows teachers to create and manage polls, while s
 - **Backend:** Node.js, Express, Socket.io
 - **Deployment:** Vercel (Frontend), Render (Backend)
 
+## Application visuals
+![image](https://github.com/user-attachments/assets/d389dbe7-cfcd-4718-9b64-0441b5cdb4bf)
+![image](https://github.com/user-attachments/assets/e0d2f9ef-b824-4385-9ef8-90a27b96516b)
+![image](https://github.com/user-attachments/assets/92f8beca-cc15-4da0-965e-3b38fc521156)
+![image](https://github.com/user-attachments/assets/68d09ca8-c51d-448a-a32f-d99332e52a23)
+![image](https://github.com/user-attachments/assets/0733a995-24f4-4fb4-a69f-8ae7d0ae37b7)
+![image](https://github.com/user-attachments/assets/895fbd91-4e38-4e77-ac92-3f0be1b008f3)
+![image](https://github.com/user-attachments/assets/f9906d76-d47b-4e7a-a5b1-fe85828cf490)
+
 ## Installation & Setup
 ### Prerequisites:
 Make sure you have **Node.js** and **npm** installed.
