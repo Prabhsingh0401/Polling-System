@@ -20,7 +20,6 @@ const Teacher = () => {
     const [allStudentsAnswered, setAllStudentsAnswered] = useState(false);
 
     useEffect(() => {
-        // Handle connection events
         socket.on("connect", () => {
             console.log("Teacher connected to server with ID:", socket.id);
             setConnectionStatus("connected");

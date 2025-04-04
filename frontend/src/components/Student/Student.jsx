@@ -7,6 +7,8 @@ import PollResults from "../PollResult/PollResult";
 const BACKEND_URL = "https://polling-system-txvu.onrender.com";
 const socket = io(BACKEND_URL);
 
+const TAB_ID = Math.random().toString(36).substring(2, 15);
+
 const Student = () => {
     const dispatch = useDispatch();
     const poll = useSelector((state) => state.poll);
@@ -18,6 +20,24 @@ const Student = () => {
     const [connectionStatus, setConnectionStatus] = useState("connecting");
     const [remainingTime, setRemainingTime] = useState(null);
     const [kicked, setKicked] = useState(false);
+
+    // Load saved name from localStorage on initial render
+    useEffect(() => {
+        try {
+            const savedSessionData = localStorage.getItem('studentSessionData');
+            if (savedSessionData) {
+                const sessionData = JSON.parse(savedSessionData);
+                
+                // Only restore the session if it belongs to the current tab
+                if (sessionData.tabId === TAB_ID && sessionData.name) {
+                    setName(sessionData.name);
+                    console.log(`Restored session for student: ${sessionData.name}`);
+                }
+            }
+        } catch (error) {
+            console.error("Error loading saved session:", error);
+        }
+    }, []);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -38,10 +58,12 @@ const Student = () => {
         // Poll events
         socket.on("pollCreated", (newPoll) => {
             console.log("Student received new poll:", newPoll);
-            console.log("Options in received poll:", newPoll.options);
             
             if (newPoll && newPoll.question) {
-                dispatch(setPoll(newPoll));
+                dispatch(setPoll({
+                    ...newPoll,
+                    options: newPoll.options || []
+                }));
                 setSubmitted(false);
                 setSelectedOption("");
                 
@@ -72,6 +94,9 @@ const Student = () => {
             console.log("You have been kicked from the classroom");
             setKicked(true);
             socket.disconnect();
+            
+            // Clear session data if kicked
+            localStorage.removeItem('studentSessionData');
         });
 
         socket.on("error", (error) => {
@@ -106,11 +131,37 @@ const Student = () => {
         };
     }, [dispatch, name, remainingTime]);
 
+    // Handle window close/tab close to clear session data
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            // We don't clear storage on refresh, only on tab/window close
+            // This is handled by tabId comparison on reload
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
     const handleJoin = () => {
         if (nameInput.trim()) {
             const studentName = nameInput.trim();
             setName(studentName);
             console.log(`Joining as student: ${studentName}`);
+            
+            // Save to localStorage with the current tab ID
+            try {
+                localStorage.setItem('studentSessionData', JSON.stringify({
+                    name: studentName,
+                    tabId: TAB_ID,
+                    timestamp: Date.now()
+                }));
+            } catch (error) {
+                console.error("Error saving session data:", error);
+            }
+            
             socket.emit("join", { role: "student", name: studentName });
         }
     };
@@ -121,6 +172,15 @@ const Student = () => {
             socket.emit("submitAnswer", { studentId: name, answer: selectedOption });
             setSubmitted(true);
         }
+    };
+
+    const handleLogout = () => {
+        // Clear session data and reset state
+        localStorage.removeItem('studentSessionData');
+        setName("");
+        setNameInput("");
+        setSelectedOption("");
+        setSubmitted(false);
     };
 
     if (kicked) {
@@ -192,6 +252,12 @@ const Student = () => {
                         <div className="flex items-center space-x-2">
                             <span className={`inline-block w-3 h-3 rounded-full ${connectionStatus === "connected" ? "bg-green-500" : "bg-red-500"}`}></span>
                             <span className="text-sm text-gray-300">{name}</span>
+                            <button
+                                onClick={handleLogout}
+                                className="ml-2 px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded-md transition"
+                            >
+                                Logout
+                            </button>
                         </div>
                     </div>
 

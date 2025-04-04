@@ -108,46 +108,24 @@ io.on("connection", (socket) => {
         socket.emit("studentList", studentNames);
     });
 
-    socket.on("createPoll", (data) => {
-        if (!activePoll) {
-            console.log(`Teacher ${socket.id} created poll:`, data);
-            activePoll = { 
-                question: data.question, 
-                duration: data.duration,
-                responses: {} 
-            };
-            studentResponses = {}; 
-            
-            io.emit("pollCreated", activePoll);
-            console.log(`Poll created and emitted to ${io.engine.clientsCount} clients`);
-            
-            if (data.duration) {
-                setTimeout(() => {
-                    if (activePoll && activePoll.question === data.question) {
-                        console.log(`Poll "${data.question}" ended automatically after ${data.duration} seconds`);
-                        io.emit("pollResults", activePoll);
-                        activePoll = null;
-                        studentResponses = {};
-                        emitStats();
-                    }
-                }, data.duration * 1000);
+        socket.on("createPoll", (data) => {
+            if (!activePoll) {
+                console.log(`Teacher ${socket.id} created poll:`, data);
+                activePoll = { 
+                    question: data.question, 
+                    duration: data.duration,
+                    options: data.options || [],
+                    responses: {} 
+                };
+                studentResponses = {}; 
                 
-                let timeRemaining = data.duration;
-                const timeInterval = setInterval(() => {
-                    timeRemaining--;
-                    if (timeRemaining <= 0 || !activePoll) {
-                        clearInterval(timeInterval);
-                    } else {
-                        io.emit("pollTimeUpdate", timeRemaining);
-                    }
-                }, 1000);
+                io.emit("pollCreated", activePoll);
+                console.log(`Poll created and emitted to ${io.engine.clientsCount} clients`);
+                
+            } else {
+                socket.emit("error", { message: "A poll is already active" });
             }
-            
-            emitStats();
-        } else {
-            socket.emit("error", { message: "A poll is already active" });
-        }
-    });
+        });
 
     socket.on("submitAnswer", (data) => {
         console.log(`Received answer from ${data.studentId}: "${data.answer}"`);

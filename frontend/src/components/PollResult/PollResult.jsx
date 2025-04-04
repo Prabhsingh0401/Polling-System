@@ -3,8 +3,8 @@ import React from "react";
 const PollResults = ({ poll }) => {
   if (!poll || !poll.question || !poll.responses) {
     return (
-      <div className="text-center p-4 bg-gray-100 rounded-lg">
-        <p className="text-gray-500">No poll results available</p>
+      <div className="text-center p-4 bg-gray-800 rounded-lg">
+        <p className="text-gray-400">No poll results available</p>
       </div>
     );
   }
@@ -18,9 +18,9 @@ const PollResults = ({ poll }) => {
 
   return (
     <div className="mt-4">
-      <h3 className="text-lg font-medium mb-2">Poll Results: {poll.question}</h3>
-      <div className="text-sm text-gray-600 mb-3">
-        Total votes: {totalVotes} {poll.duration && <span className="ml-2 text-blue-500">({poll.duration}s poll)</span>}
+      <h3 className="text-lg font-medium mb-2 text-white">Poll Results: {poll.question}</h3>
+      <div className="text-sm text-gray-400 mb-3">
+        Total votes: {totalVotes} {poll.duration && <span className="ml-2 text-blue-400">({poll.duration}s poll)</span>}
       </div>
       
       {sortedResponses.length > 0 ? (
@@ -35,7 +35,7 @@ const PollResults = ({ poll }) => {
                 className={`bg-gray-600 border rounded-lg p-3 ${isLeading ? 'border-gray-400' : ''}`}
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className={`font-medium ${isLeading ? 'text-white' : ''}`}>
+                  <span className={`font-medium ${isLeading ? 'text-white' : 'text-gray-200'}`}>
                     {answer}
                     {isLeading && totalVotes > 1 && <span className="ml-2 text-xs bg-blue-500 text-white px-2 py-0.5 rounded-full">Leading</span>}
                   </span>
